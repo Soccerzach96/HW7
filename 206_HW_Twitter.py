@@ -3,7 +3,6 @@ import tweepy
 import requests
 import urllib.request, urllib.parse, urllib.error
 import json
-import twitter_info
 
 ## SI 206 - HW
 ## COMMENT WITH: Zachary Strong
@@ -40,6 +39,8 @@ import twitter_info
 ## **** For extra credit, create another file called twitter_info.py that 
 ## contains your consumer_key, consumer_secret, access_token, and access_token_secret, 
 ## import that file here.  Do NOT add and commit that file to a public GitHub repository.
+
+import twitter_info
 
 ## **** If you choose not to do that, we strongly advise using authentication information 
 ## for an 'extra' Twitter account you make just for this class, and not your personal 
@@ -78,7 +79,11 @@ try:
 except:
     CACHE_DICTION = {}
 
-def getLocationWithCaching(loc):
+
+## 2. Write a function to get twitter data that works with the caching pattern, 
+## 		so it either gets new data or caches data, depending upon what the input 
+##		to search for is. 
+def cached_data(loc):
     url = serviceurl + urllib.parse.urlencode(
         {'address': loc})
 
@@ -100,22 +105,32 @@ def getLocationWithCaching(loc):
             print("Wasn't in cache and wasn't valid search either")
             return None
 
-
-## 2. Write a function to get twitter data that works with the caching pattern, 
-## 		so it either gets new data or caches data, depending upon what the input 
-##		to search for is. 
-while True:
-    address = input('Enter location: ')
-    if len(address) < 1: break
-    data = getLocationWithCaching(address)
-    country = data["results"][0]["address_components"]
-    for d in country:
-        if 'country' in d["types"]:
-            print(d["short_name"])
+# def cached_data():
+# 	while True:
+#     	address = input('Enter location: ')
+#     	if len(address) < 1: break
+#     	data = getLocationWithCaching(address)
+#     	country = data["results"][0]["address_components"]
+#     	for d in country:
+#         	if 'country' in d["types"]:
+#             	print(d["short_name"])
 
 
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the 
 ##		data you got back!
+
+input_count = 0:
+while input_count <= 2:
+	tweet_term = input('Enter Tweet Term: ')
+	data = cached_data(tweet_term)
+
+	tweet_count = 0
+	while tweet_count <= 4:
+		results = api.search(q=)
+
+	input_count += 1
+
+
 
 
 ## 4. With what you learn from the data -- e.g. how exactly to find the 
