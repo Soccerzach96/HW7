@@ -90,26 +90,17 @@ def cached_data(term):
     else:
         print("Making a request for new data...")
         results = api.search(q = term, count = 5)
-
-        tweets = results['statuses']
-        five_tweets = []
-        content = {}
-        tweet_number = 1
-        for tweet in tweets:
-        	content['text'] = tweet['text']
-        	content['created_at'] = tweet['created_at']
-        	five_tweets.append(content)
-
+        print(type(results))
         try:
-            CACHE_DICTION[term] =  json.loads(five_tweets)
-            dumped_json_cache = json.dumps(CACHE_DICTION)
-            fw = open(CACHE_FNAME,"w")
-            fw.write(dumped_json_cache)
-            fw.close() # Close the open file
-            return CACHE_DICTION[term]
+        	CACHE_DICTION[term] =  json.loads(results)
+        	dumped_json_cache = json.dumps(CACHE_DICTION)
+        	fw = open(CACHE_FNAME,"w")
+        	fw.write(dumped_json_cache)
+        	fw.close() # Close the open file
+        	return CACHE_DICTION[term]
         except:
-            print("Wasn't in cache and wasn't valid search either")
-            return None
+        	print("Wasn't in cache and wasn't valid search either")
+        	return None
 
 
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the 
@@ -119,6 +110,13 @@ input_count = 0
 while input_count <= 2:
 	tweet_term = input('Enter Tweet Term: ')
 	tweet_data = cached_data(tweet_term)
+	print(tweet_data)
+	# for tweet in tweet_data:
+	# 	print('TEXT: ', tweet['text'])
+	# 	print('CREATED AT: ', tweet['created_at'])
+	# 	print('\n')
+	# 	print('\n')
+
 	input_count += 1
 
 
