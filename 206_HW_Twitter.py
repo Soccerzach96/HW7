@@ -68,8 +68,7 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 ## 1. Set up the caching pattern start -- the dictionary and the try/except 
 ## 		statement shown in class.
 
-serviceurl = 'http://maps.googleapis.com/maps/api/geocode/json?'
-CACHE_FNAME = 'cache_geo_locations.json' # String for your file. We want the JSON file type, because that way, we can easily get the information into a Python dictionary!
+CACHE_FNAME = 'cache_twitter.json' # String for your file. We want the JSON file type, because that way, we can easily get the information into a Python dictionary!
 
 try:
     cache_file = open(CACHE_FNAME, 'r') # Try to read the data from the file
@@ -83,54 +82,44 @@ except:
 ## 2. Write a function to get twitter data that works with the caching pattern, 
 ## 		so it either gets new data or caches data, depending upon what the input 
 ##		to search for is. 
-def cached_data(loc):
-    url = serviceurl + urllib.parse.urlencode(
-        {'address': loc})
 
-    if loc in CACHE_DICTION:
+def cached_data(term):
+    if term in CACHE_DICTION:
         print("Data was in the cache")
-        return CACHE_DICTION[loc]
+        return CACHE_DICTION[term]
     else:
         print("Making a request for new data...")
-        uh = urllib.request.urlopen(url)
-        data = uh.read().decode()
+        results = api.search(q = term, count = 5)
+
+        tweets = results['statuses']
+        five_tweets = []
+        content = {}
+        tweet_number = 1
+        for tweet in tweets:
+        	content['text'] = tweet['text']
+        	content['created_at'] = tweet['created_at']
+        	five_tweets.append(content)
+
         try:
-            CACHE_DICTION[loc] =  json.loads(data)
+            CACHE_DICTION[term] =  json.loads(five_tweets)
             dumped_json_cache = json.dumps(CACHE_DICTION)
             fw = open(CACHE_FNAME,"w")
             fw.write(dumped_json_cache)
             fw.close() # Close the open file
-            return CACHE_DICTION[loc]
+            return CACHE_DICTION[term]
         except:
             print("Wasn't in cache and wasn't valid search either")
             return None
-
-# def cached_data():
-# 	while True:
-#     	address = input('Enter location: ')
-#     	if len(address) < 1: break
-#     	data = getLocationWithCaching(address)
-#     	country = data["results"][0]["address_components"]
-#     	for d in country:
-#         	if 'country' in d["types"]:
-#             	print(d["short_name"])
 
 
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the 
 ##		data you got back!
 
-input_count = 0:
+input_count = 0
 while input_count <= 2:
 	tweet_term = input('Enter Tweet Term: ')
-	data = cached_data(tweet_term)
-
-	tweet_count = 0
-	while tweet_count <= 4:
-		results = api.search(q=)
-
+	tweet_data = cached_data(tweet_term)
 	input_count += 1
-
-
 
 
 ## 4. With what you learn from the data -- e.g. how exactly to find the 
